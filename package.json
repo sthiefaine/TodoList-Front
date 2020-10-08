@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
+    "axios": "^0.20.0",
     "classnames": "^2.2.6",
-    "next": "9.5.3",
+    "next": "9.5.4",
+    "next-redux-wrapper": "^6.0.2",
     "nprogress": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",

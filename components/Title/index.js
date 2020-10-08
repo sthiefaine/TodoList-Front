@@ -1,6 +1,11 @@
-function Title({
-  counterValue,
-}){
+import { useSelector } from 'react-redux'
+
+function Title(){
+
+  const tasks = useSelector(state => state.task);
+  const getTasksUnchecked = tasks.tasksData.filter(item => item.done === false);
+  var counterValue = getTasksUnchecked.length
+
   let text = 'Aucune tâche en cours';
 
   if (counterValue === 1) {

@@ -1,9 +1,26 @@
+import { useEffect } from 'react';
+import { useDispatch} from 'react-redux';
 
-import Form from '../containers/Form';
-import Title from '../containers/Title';
-import Tasks from '../containers/Tasks';
+import Form from '../components/Form';
+import Title from '../components/Title';
+import Tasks from '../components/Tasks';
+
+
+/* === import Actions === */
+import { loadTasks } from '../redux/reducers/task'
+
 
 function Home() {
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    async function dispatchLoadTasks() {
+      await dispatch(loadTasks())
+    }
+    dispatchLoadTasks()
+  }, [dispatch])
+
   return (
     <>
       <header>

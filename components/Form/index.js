@@ -1,17 +1,23 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-function Form({
+/* === import Actions === */
+import {
   saveNewTask,
-}){
+} from '../../redux/reducers/task';
+
+function Form(){
+  const dispatch = useDispatch()
+  const tasks = useSelector(state => state.task);
 
   const [newTaskValue, setNewTaskValue] = useState('');
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    if(newTaskValue.length > 1){
+    if(newTaskValue.trim().length > 1){
       console.log('handleOnSubmit');
-      console.log(event.target);
-      saveNewTask(newTaskValue);
+      console.log(newTaskValue);
+      dispatch(saveNewTask(newTaskValue.trim()));
       setNewTaskValue('');
     }
   };

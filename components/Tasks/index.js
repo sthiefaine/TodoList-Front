@@ -1,24 +1,30 @@
 import React from 'react';
-function Tasks({
+import { useSelector, useDispatch } from 'react-redux'
+
+/* === import Actions === */
+import {
   setNewCheckBoxValue,
   deleteTask,
-  todolistData,
-}){
+} from '../../redux/reducers/task';
+
+function Tasks(){
+
+  const dispatch = useDispatch()
+  const tasks = useSelector(state => state.task);
+
   const handelSetNewCheckBox = (event) => {
     console.log('handelSetNewCheckBox');
-    setNewCheckBoxValue(event.target.id);
+    dispatch(setNewCheckBoxValue(event.target.id));
   };
 
-  const tasksList = todolistData.map((task) => {
+  const tasksList = tasks.tasksData.map((task) => {
     const classTaskDone = task.done === true ? 'task task--done' : 'task';
     // const checkboxDone = task.done === true ? 'checked' : '';
 
     return (
-      <React.Fragment
-        key={task.id}
-      >
         <li
           className={classTaskDone}
+          key={task.id}
         >
           <div>
             <input
@@ -41,7 +47,7 @@ function Tasks({
             <button 
               type="button"
               className="button__delete"
-              onClick={() => deleteTask(task.id)}
+              onClick={() => dispatch(deleteTask(task.id))}
             >
               DEL
             </button>
@@ -49,8 +55,6 @@ function Tasks({
           </div>
 
         </li>
-      </React.Fragment>
-
     );
   });
 
@@ -62,6 +66,5 @@ function Tasks({
 
   );
 };
-
 
 export default Tasks;
