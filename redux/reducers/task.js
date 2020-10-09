@@ -1,14 +1,14 @@
+//! Redux Toolkit allows us to write "mutating" logic in reducers.
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // import { createSlice, current } from '@reduxjs/toolkit';
 // import and use "current" for console.log
 
 import axios from 'axios';
 
-import { getMaxId } from '../../selectors/getMaxId';
 
 export const loadTasks = createAsyncThunk(
   'task/loadTasks',
-  async (_, thunkAPI) => {
+  async (payload, thunkAPI) => {
     try {
       const response = await axios.get(`http://localhost:3002/tasks`, {
         method: 'get',
@@ -24,31 +24,65 @@ export const loadTasks = createAsyncThunk(
     }
 
   }
-)
+);
+
+
+export const createTask = createAsyncThunk(
+  'task/createTask',
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(`http://localhost:3002/task`, {
+        method: 'post',
+        headers: {
+          Accept: '*',
+        },
+        data: {
+          label: payload,
+        }
+      })
+      // return response.json()
+      return response.data
+
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message })
+    }
+
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  'task/deleteTask',
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.delete(`http://localhost:3002/task/${payload}`, {
+        method: 'delete',
+        headers: {
+          Accept: '*',
+        },
+      })
+      // return response.json()
+      return response.data
+
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message })
+    }
+
+  }
+);
+
+
+const initialState = {
+  tasksData: [],
+  loading: 'idle',
+}
 
 export const taskSlice = createSlice({
   name: 'task',
-  initialState: {
-    tasksData: [],
-    loading: 'idle',
-  },
-
+  initialState,
   reducers: {
     setNewCheckBoxValue: (state, action) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers.
       const getTaskDataIndex = state.tasksData.findIndex(item => item.id === Number(action.payload));
       state.tasksData[getTaskDataIndex].done = !state.tasksData[getTaskDataIndex].done;
-    },
-    saveNewTask: (state, action) => {
-      state.tasksData.push({
-        id: getMaxId(state.tasksData),
-        label: action.payload.trim(),
-        done: false,
-      })
-    },
-    deleteTask: (state, action) => {
-      const getOtherTasks = state.tasksData.filter(item => item.id !== Number(action.payload));
-      state.tasksData = getOtherTasks;
     },
   },
   extraReducers: {
@@ -68,14 +102,41 @@ export const taskSlice = createSlice({
       }]
       state.error = action.payload.error
     },
+
+
+    [createTask.pending]: (state) => {
+      state.loading = 'loading'
+    },
+    [createTask.fulfilled]: (state, action) => {
+      state.tasksData.push(action.payload)
+      state.loading = 'loaded'
+    },
+    [createTask.rejected]: (state, action) => {
+      state.error = action.payload.error
+    },
+
+
+    [deleteTask.pending]: (state) => {
+      state.loading = 'loading'
+    },
+    [deleteTask.fulfilled]: (state, action) => {
+      const getOtherTasks = state.tasksData.filter(item => item.id !== Number(action.payload.id));
+      state.tasksData = getOtherTasks;
+      state.loading = 'loaded'
+    },
+    [deleteTask.rejected]: (state, action) => {
+      state.error = action.payload.error
+    },
+
   },
 });
 
 export default taskSlice.reducer;
 
+//
+export const tasksSelector = state => state.task;
+
 export const {
   saveTasks,
   setNewCheckBoxValue,
-  saveNewTask,
-  deleteTask,
 } = taskSlice.actions;

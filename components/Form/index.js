@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 /* === import Actions === */
 import {
-  saveNewTask,
+  createTask,
 } from '../../redux/reducers/task';
 
 function Form(){
@@ -17,7 +17,7 @@ function Form(){
     if(newTaskValue.trim().length > 1){
       console.log('handleOnSubmit');
       console.log(newTaskValue);
-      dispatch(saveNewTask(newTaskValue.trim()));
+      dispatch(createTask(newTaskValue.trim()));
       setNewTaskValue('');
     }
   };
