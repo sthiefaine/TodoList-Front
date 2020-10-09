@@ -7,7 +7,7 @@ import Tasks from '../components/Tasks';
 
 
 /* === import Actions === */
-import { loadTasks } from '../redux/reducers/task'
+import { loadTasks } from '../redux/slices/tasks'
 
 
 function Home() {
@@ -15,10 +15,7 @@ function Home() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    async function dispatchLoadTasks() {
-      await dispatch(loadTasks())
-    }
-    dispatchLoadTasks()
+    dispatch(loadTasks())
   }, [dispatch])
 
   return (

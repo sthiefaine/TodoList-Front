@@ -1,20 +1,26 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
-/* === import Actions === */
 import {
-  setNewCheckBoxValue,
+  tasksSelector,
   deleteTask,
-} from '../../redux/reducers/task';
+  updateTask,
+} from '../../redux/slices/tasks';
 
 function Tasks(){
 
   const dispatch = useDispatch()
-  const tasks = useSelector(state => state.task);
+  const tasks = useSelector(tasksSelector);
 
-  const handelSetNewCheckBox = (event) => {
+  const handelSetNewCheckBox = (id, done) => {
     console.log('handelSetNewCheckBox');
-    dispatch(setNewCheckBoxValue(event.target.id));
+    dispatch(updateTask(
+      {id, 
+        data: {
+         done,
+        }
+      }
+    ));
   };
 
   const tasksList = tasks.tasksData.map((task) => {
@@ -32,7 +38,7 @@ function Tasks(){
               className="task__input"
               type="checkbox"
               checked={task.done}
-              onChange={handelSetNewCheckBox}
+              onChange={() => handelSetNewCheckBox(task.id, !task.done)}
             />
 
             <label
@@ -47,7 +53,7 @@ function Tasks(){
             <button 
               type="button"
               className="button__delete"
-              onClick={() => dispatch(deleteTask(task.id))}
+              onClick={() => dispatch(deleteTask({id: task.id}))}
             >
               DEL
             </button>

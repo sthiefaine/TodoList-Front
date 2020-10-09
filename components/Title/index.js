@@ -1,8 +1,12 @@
 import { useSelector } from 'react-redux'
 
+import {
+  tasksSelector,
+} from '../../redux/slices/tasks';
+
 function Title(){
 
-  const tasks = useSelector(state => state.task);
+  const tasks = useSelector(tasksSelector);
   const getTasksUnchecked = tasks.tasksData.filter(item => item.done === false);
   var counterValue = getTasksUnchecked.length
 

@@ -1,14 +1,13 @@
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 /* === import Actions === */
 import {
   createTask,
-} from '../../redux/reducers/task';
+} from '../../redux/slices/tasks';
 
 function Form(){
   const dispatch = useDispatch()
-  const tasks = useSelector(state => state.task);
 
   const [newTaskValue, setNewTaskValue] = useState('');
 
@@ -16,7 +15,6 @@ function Form(){
     event.preventDefault();
     if(newTaskValue.trim().length > 1){
       console.log('handleOnSubmit');
-      console.log(newTaskValue);
       dispatch(createTask(newTaskValue.trim()));
       setNewTaskValue('');
     }

@@ -2,7 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 // == Import : local
-import reducer from '../reducers';
+import rootReducer from '../slices';
 import logMiddleware from '../middlewares/logMiddleware';
 
 
@@ -13,7 +13,8 @@ export function getStore(initialState = {}) {
      * A single reducer function that will be used as the root reducer, or an
      * object of slice reducers that will be passed to `combineReducers()`.
      */
-    reducer,
+    reducer: rootReducer,
+
     /**
      * An array of Redux middleware to install. If not supplied, defaults to
      * the set of middleware returned by `getDefaultMiddleware()`.
