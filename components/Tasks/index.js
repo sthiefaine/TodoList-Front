@@ -1,24 +1,36 @@
 import React from 'react';
-function Tasks({
-  setNewCheckBoxValue,
+import { useSelector, useDispatch } from 'react-redux'
+
+import {
+  tasksSelector,
   deleteTask,
-  todolistData,
-}){
-  const handelSetNewCheckBox = (event) => {
+  updateTask,
+} from '../../redux/slices/tasks';
+
+function Tasks(){
+
+  const dispatch = useDispatch()
+  const tasks = useSelector(tasksSelector);
+
+  const handelSetNewCheckBox = (id, done) => {
     console.log('handelSetNewCheckBox');
-    setNewCheckBoxValue(event.target.id);
+    dispatch(updateTask(
+      {id, 
+        data: {
+         done,
+        }
+      }
+    ));
   };
 
-  const tasksList = todolistData.map((task) => {
+  const tasksList = tasks.tasksData.map((task) => {
     const classTaskDone = task.done === true ? 'task task--done' : 'task';
     // const checkboxDone = task.done === true ? 'checked' : '';
 
     return (
-      <React.Fragment
-        key={task.id}
-      >
         <li
           className={classTaskDone}
+          key={task.id}
         >
           <div>
             <input
@@ -26,7 +38,7 @@ function Tasks({
               className="task__input"
               type="checkbox"
               checked={task.done}
-              onChange={handelSetNewCheckBox}
+              onChange={() => handelSetNewCheckBox(task.id, !task.done)}
             />
 
             <label
@@ -41,7 +53,7 @@ function Tasks({
             <button 
               type="button"
               className="button__delete"
-              onClick={() => deleteTask(task.id)}
+              onClick={() => dispatch(deleteTask({id: task.id}))}
             >
               DEL
             </button>
@@ -49,8 +61,6 @@ function Tasks({
           </div>
 
         </li>
-      </React.Fragment>
-
     );
   });
 
@@ -62,6 +72,5 @@ function Tasks({
 
   );
 };
-
 
 export default Tasks;
